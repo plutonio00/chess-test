@@ -66,7 +66,9 @@ class Desk
             $this->isWhitesMove = !$this->isWhitesMove;
 
             if (!$this->checkMovePriority($xFrom, $yFrom)) {
-                throw new MoveException(sprintf('Incorrect move: now %s\'s move', $this->isWhitesMove));
+                throw new MoveException(
+                    sprintf('Incorrect move: now %s\'s move', $this->isWhitesMove ? 'White':'Black')
+                );
             }
         }
 
