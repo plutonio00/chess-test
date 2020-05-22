@@ -1,9 +1,12 @@
 <?php
 
-class Desk {
+class Desk
+{
     private $figures = [];
+    private $isWhitesMove;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->figures['a'][1] = new Rook(false);
         $this->figures['b'][1] = new Knight(false);
         $this->figures['c'][1] = new Bishop(false);
@@ -41,23 +44,38 @@ class Desk {
         $this->figures['h'][8] = new Rook(true);
     }
 
-    public function move($move) {
+    public function move($move)
+    {
         if (!preg_match('/^([a-h])(\d)-([a-h])(\d)$/', $move, $match)) {
             throw new \Exception("Incorrect move");
         }
 
         $xFrom = $match[1];
         $yFrom = $match[2];
-        $xTo   = $match[3];
-        $yTo   = $match[4];
+        $xTo = $match[3];
+        $yTo = $match[4];
 
-        if (isset($this->figures[$xFrom][$yFrom])) {
-            $this->figures[$xTo][$yTo] = $this->figures[$xFrom][$yFrom];
+        if (!isset($this->figures[$xFrom][$yFrom])) {
+            throw new MoveException(sprintf('Incorrect move: cell %s%s is empty', $xFrom, $yFrom));
         }
+
+        if (empty($this->isWhitesMove)) {
+            $this->isWhitesMove = true;
+        }
+        else {
+            $this->isWhitesMove = !$this->isWhitesMove;
+
+            if (!$this->checkMovePriority($xFrom, $yFrom)) {
+                throw new MoveException(sprintf('Incorrect move: now %s\'s move', $this->isWhitesMove));
+            }
+        }
+
+        $this->figures[$xTo][$yTo] = $this->figures[$xFrom][$yFrom];
         unset($this->figures[$xFrom][$yFrom]);
     }
 
-    public function dump() {
+    public function dump()
+    {
         for ($y = 8; $y >= 1; $y--) {
             echo "$y ";
             for ($x = 'a'; $x <= 'h'; $x++) {
@@ -70,5 +88,13 @@ class Desk {
             echo "\n";
         }
         echo "  abcdefgh\n";
+    }
+
+    protected function checkMovePriority(string $xFrom, int $yFrom): bool
+    {
+        /** @var Figure $figure */
+        $figure = $this->figures[$xFrom][$yFrom];
+
+        return ($figure->isBlack() && !$this->isWhitesMove) || (!$figure->isBlack() && $this->isWhitesMove);
     }
 }
