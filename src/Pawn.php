@@ -35,12 +35,14 @@ class Pawn extends Figure
                     $checkResult = !(isset($state[$xFrom][$yFrom + 1]) || isset($state[$xTo][$yTo]));
                 }
             }
-        } elseif (abs(Constants::LETTERS_NUMBERS[$xTo] - Constants::LETTERS_NUMBERS[$xFrom]) === 1) {
+        }
+        elseif (abs($yTo - $yFrom) === 1 &&
+            abs(Constants::LETTERS_NUMBERS[$xTo] - Constants::LETTERS_NUMBERS[$xFrom]) === 1
+        )
+        {
             $checkResult = isset($state[$xTo][$yTo]);
         }
 
         return $checkResult;
     }
-
-
 }

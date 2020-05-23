@@ -91,6 +91,13 @@ class Test extends \PHPUnit\Framework\TestCase {
         $this->runFile('tests/027-pawn-can-not-move-across-figure.test');
     }
 
+    /**
+     * @group pawn
+     */
+    public function testPawnCanNotTakeFigureAcrossSeveralFields() {
+        $this->runFile('tests/028-pawn-can-not-take-figure-across-several-fields.test');
+    }
+
 
     /**
      * Test file structure
