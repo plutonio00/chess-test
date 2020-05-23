@@ -42,10 +42,7 @@ class Pawn extends Figure
         {
             /** @var Figure $figure */
             $figure = $state[$xTo][$yTo] ?? null;
-
-            if ($figure && $this->isBlack !== $figure->isBlack()) {
-                $checkResult = true;
-            }
+            $checkResult = $figure && $this->isBlack !== $figure->isBlack();
         }
 
         return $checkResult;
