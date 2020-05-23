@@ -46,8 +46,10 @@ class Desk
 
     public function move($move)
     {
-        if (!preg_match('/^([a-h])(\d)-([a-h])(\d)$/', $move, $match)) {
-            throw new \Exception("Incorrect move");
+        if (!preg_match('/^([a-h])([1-8])-([a-h])([1-8])$/', $move, $match)) {
+            throw new MoveException(
+                sprintf('Incorrect move %s: there are no such coordinates on the board', $move)
+            );
         }
 
         $xFrom = $match[1];
@@ -56,20 +58,29 @@ class Desk
         $yTo = $match[4];
 
         if (!isset($this->figures[$xFrom][$yFrom])) {
-            throw new MoveException(sprintf('Incorrect move: cell %s%s is empty', $xFrom, $yFrom));
+            throw new MoveException(sprintf('Incorrect move %s: cell %s%s is empty', $move, $xFrom, $yFrom));
+        }
+        elseif ($xFrom === $xTo && $yFrom === $yTo) {
+            throw new MoveException(sprintf('Incorrect move %s: the figure remains in place', $move));
+        }
+        else {
+            $figure = $this->figures[$xFrom][$yFrom];
         }
 
         if (empty($this->isWhitesMove)) {
             $this->isWhitesMove = true;
-        }
-        else {
+        } else {
             $this->isWhitesMove = !$this->isWhitesMove;
 
-            if (!$this->checkMovePriority($xFrom, $yFrom)) {
+            if (!$this->checkMovePriority($figure)) {
                 throw new MoveException(
-                    sprintf('Incorrect move: now %s\'s move', $this->isWhitesMove ? 'White':'Black')
+                    sprintf('Incorrect move %s: now %s\'s move', $move, $this->isWhitesMove ? 'White' : 'Black')
                 );
             }
+        }
+
+        if ($figure instanceof Pawn && !$figure->checkMove($xFrom, $xTo, $yFrom, $yTo, $this->figures)) {
+            throw new MoveException('Incorrect move: the pawn doesn’t go that way');
         }
 
         $this->figures[$xTo][$yTo] = $this->figures[$xFrom][$yFrom];
@@ -92,11 +103,8 @@ class Desk
         echo "  abcdefgh\n";
     }
 
-    protected function checkMovePriority(string $xFrom, int $yFrom): bool
+    protected function checkMovePriority(Figure $figure): bool
     {
-        /** @var Figure $figure */
-        $figure = $this->figures[$xFrom][$yFrom];
-
         return ($figure->isBlack() && !$this->isWhitesMove) || (!$figure->isBlack() && $this->isWhitesMove);
     }
 }
