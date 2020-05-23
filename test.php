@@ -102,9 +102,15 @@ class Test extends \PHPUnit\Framework\TestCase {
      * @group pawn
      */
     public function testPawnCanNotTakeFigureWithSameColor() {
-        $this->runFile('tests/029-pawn-cat-not-take-figure-with-same-color.test');
+        $this->runFile('tests/029-pawn-can-not-take-figure-with-same-color.test');
     }
 
+    /**
+     * @group pawn
+     */
+    public function testPawnCanNotTakeFigureByMoveBack() {
+        $this->runFile('tests/030-pawn-can-not-take-figure-by-move-back.test');
+    }
 
     /**
      * Test file structure

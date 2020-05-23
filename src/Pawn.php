@@ -18,11 +18,10 @@ class Pawn extends Figure
     {
         $checkResult = false;
         list($xFrom, $yFrom, $xTo, $yTo, $state) = $moveData;
+        $yDiff = $yTo - $yFrom;
 
         if ($xFrom === $xTo) {
-            $yDiff = $yTo - $yFrom;
-
-            if ($this->isBlack()) {
+            if ($this->isBlack) {
                 if ($yDiff === -1) {
                     $checkResult = !isset($state[$xTo][$yTo]);
                 } elseif ($yDiff === -2 && $yFrom === self::FIRST_BLACK_PAWN_ROW) {
@@ -35,14 +34,17 @@ class Pawn extends Figure
                     $checkResult = !(isset($state[$xFrom][$yFrom + 1]) || isset($state[$xTo][$yTo]));
                 }
             }
-        }
-        elseif (abs($yTo - $yFrom) === 1 &&
-            abs(Constants::LETTERS_NUMBERS[$xTo] - Constants::LETTERS_NUMBERS[$xFrom]) === 1
-        )
-        {
+        } else {
+            $rowDiff = abs(Constants::LETTERS_NUMBERS[$xTo] - Constants::LETTERS_NUMBERS[$xFrom]);
+
             /** @var Figure $figure */
             $figure = $state[$xTo][$yTo] ?? null;
-            $checkResult = $figure && $this->isBlack !== $figure->isBlack();
+
+            if ($rowDiff === 1) {
+                if (($this->isBlack && $yDiff === -1) || (!$this->isBlack && $yDiff === 1)) {
+                    $checkResult = $figure && $this->isBlack !== $figure->isBlack();
+                }
+            }
         }
 
         return $checkResult;
