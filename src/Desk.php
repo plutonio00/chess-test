@@ -80,7 +80,9 @@ class Desk
         }
 
         if ($figure instanceof Pawn && !$figure->checkMove([$xFrom, (int)$yFrom, $xTo, (int)$yTo, $this->figures])) {
-            throw new MoveException('Incorrect move: the pawn doesn’t go that way');
+            throw new MoveException(
+                sprintf('Incorrect move %s: the pawn doesn\'t go that way', $move)
+            );
         }
 
         $this->figures[$xTo][$yTo] = $this->figures[$xFrom][$yFrom];
