@@ -40,7 +40,12 @@ class Pawn extends Figure
             abs(Constants::LETTERS_NUMBERS[$xTo] - Constants::LETTERS_NUMBERS[$xFrom]) === 1
         )
         {
-            $checkResult = isset($state[$xTo][$yTo]);
+            /** @var Figure $figure */
+            $figure = $state[$xTo][$yTo] ?? null;
+
+            if ($figure && $this->isBlack !== $figure->isBlack()) {
+                $checkResult = true;
+            }
         }
 
         return $checkResult;
