@@ -2,6 +2,9 @@
 
 class Pawn extends Figure
 {
+    const FIRST_WHITE_PAWN_ROW = 2;
+    const FIRST_BLACK_PAWN_ROW = 7;
+
     public function __toString()
     {
         return $this->isBlack ? '♟' : '♙';
@@ -22,13 +25,13 @@ class Pawn extends Figure
             if ($this->isBlack()) {
                 if ($yDiff === -1) {
                     $checkResult = !isset($state[$xTo][$yTo]);
-                } elseif ($yDiff === -2 && $yFrom === 7) {
+                } elseif ($yDiff === -2 && $yFrom === self::FIRST_BLACK_PAWN_ROW) {
                     $checkResult = !(isset($state[$xFrom][$yFrom - 1]) || isset($state[$xTo][$yTo]));
                 }
             } else {
                 if ($yDiff === 1) {
                     $checkResult = !isset($state[$xTo][$yTo]);
-                } elseif ($yDiff === 2 && $yFrom === 2) {
+                } elseif ($yDiff === 2 && $yFrom === self::FIRST_WHITE_PAWN_ROW) {
                     $checkResult = !(isset($state[$xFrom][$yFrom + 1]) || isset($state[$xTo][$yTo]));
                 }
             }
