@@ -59,6 +59,7 @@ class Desk
             );
         }
 
+        array_shift($match);
         [$xFrom, $yFrom, $xTo, $yTo] = $match;
 
         if (!isset($this->figures[$xFrom][$yFrom])) {
