@@ -2,8 +2,8 @@
 
 class Pawn extends Figure
 {
-    const FIRST_WHITE_PAWN_ROW = 2;
-    const FIRST_BLACK_PAWN_ROW = 7;
+    private const FIRST_WHITE_PAWN_ROW = 2;
+    private const FIRST_BLACK_PAWN_ROW = 7;
 
     public function __toString()
     {
@@ -17,7 +17,7 @@ class Pawn extends Figure
     public function checkMove(array $moveData): bool
     {
         $checkResult = false;
-        list($xFrom, $yFrom, $xTo, $yTo, $state) = $moveData;
+        [$xFrom, $yFrom, $xTo, $yTo, $state] = $moveData;
         $yDiff = $yTo - $yFrom;
 
         if ($xFrom === $xTo) {

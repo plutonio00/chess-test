@@ -2,9 +2,12 @@
 
 class Desk
 {
-    private $figures = [];
-    private $isWhitesMove;
+    private array $figures = [];
+    private bool $isWhitesMove;
 
+    /**
+     * Desk constructor.
+     */
     public function __construct()
     {
         $this->figures['a'][1] = new Rook(false);
@@ -44,7 +47,11 @@ class Desk
         $this->figures['h'][8] = new Rook(true);
     }
 
-    public function move($move)
+    /**
+     * @param $move
+     * @throws MoveException
+     */
+    public function move($move): void
     {
         if (!preg_match('/^([a-h])([1-8])-([a-h])([1-8])$/', $move, $match)) {
             throw new MoveException(
@@ -52,20 +59,17 @@ class Desk
             );
         }
 
-        $xFrom = $match[1];
-        $yFrom = $match[2];
-        $xTo = $match[3];
-        $yTo = $match[4];
+        [$xFrom, $yFrom, $xTo, $yTo] = $match;
 
         if (!isset($this->figures[$xFrom][$yFrom])) {
             throw new MoveException(sprintf('Incorrect move %s: cell %s%s is empty', $move, $xFrom, $yFrom));
         }
-        elseif ($xFrom === $xTo && $yFrom === $yTo) {
+
+        if ($xFrom === $xTo && $yFrom === $yTo) {
             throw new MoveException(sprintf('Incorrect move %s: the figure remains in place', $move));
         }
-        else {
-            $figure = $this->figures[$xFrom][$yFrom];
-        }
+
+        $figure = $this->figures[$xFrom][$yFrom];
 
         if (empty($this->isWhitesMove)) {
             $this->isWhitesMove = true;
@@ -89,7 +93,7 @@ class Desk
         unset($this->figures[$xFrom][$yFrom]);
     }
 
-    public function dump()
+    public function dump(): void
     {
         for ($y = 8; $y >= 1; $y--) {
             echo "$y ";
@@ -105,6 +109,10 @@ class Desk
         echo "  abcdefgh\n";
     }
 
+    /**
+     * @param Figure $figure
+     * @return bool
+     */
     protected function checkMovePriority(Figure $figure): bool
     {
         return ($figure->isBlack() && !$this->isWhitesMove) || (!$figure->isBlack() && $this->isWhitesMove);
