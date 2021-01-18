@@ -20,21 +20,29 @@ class Pawn extends Figure
         [$xFrom, $yFrom, $xTo, $yTo, $state] = $moveData;
         $yDiff = $yTo - $yFrom;
 
+        //if pawn moves on vertical
         if ($xFrom === $xTo) {
             if ($this->isBlack) {
+                //if pawn moves on one cell
                 if ($yDiff === -1) {
                     $checkResult = !isset($state[$xTo][$yTo]);
-                } elseif ($yDiff === -2 && $yFrom === self::FIRST_BLACK_PAWN_ROW) {
+                }
+                //if pawn moves on two cells
+                elseif ($yDiff === -2 && $yFrom === self::FIRST_BLACK_PAWN_ROW) {
                     $checkResult = !(isset($state[$xFrom][$yFrom - 1]) || isset($state[$xTo][$yTo]));
                 }
-            } else {
+            }
+            //the same but for another color
+            else {
                 if ($yDiff === 1) {
                     $checkResult = !isset($state[$xTo][$yTo]);
                 } elseif ($yDiff === 2 && $yFrom === self::FIRST_WHITE_PAWN_ROW) {
                     $checkResult = !(isset($state[$xFrom][$yFrom + 1]) || isset($state[$xTo][$yTo]));
                 }
             }
-        } else {
+        }
+        //if pawn takes another figure
+        else {
             $rowDiff = abs(Constants::LETTERS_NUMBERS[$xTo] - Constants::LETTERS_NUMBERS[$xFrom]);
 
             /** @var Figure $figure */
